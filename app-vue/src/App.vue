@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <h1>
+      <button @click="handleClick" type="button">app vue error</button>
+    </h1>
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
@@ -7,6 +10,17 @@
     <router-view />
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    handleClick() {
+      console.log('app vue click');
+      window.obj.appvue;
+    }
+  }
+};
+</script>
 
 <style lang="scss">
 #app {

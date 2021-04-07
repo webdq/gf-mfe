@@ -11,4 +11,4 @@ module.exports = {
   arrowParens: 'always', // 在单独的箭头函数参数周围加上括号
   endOfLine: 'auto', // "<lf|crlf|cr|auto>"
   spaceBeforeParen: true
-}
+};

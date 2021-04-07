@@ -3,9 +3,13 @@
     <div class="content">
       <h1>app main</h1>
       <p>
-        <a href="/"><button>app main</button></a>
-        <a href="/app-vue"><button>app vue</button></a>
-        <a href="/app-react"><button>app react</button></a>
+        <a href="/"><button type="button">app main</button></a>
+        <a href="/app-vue"><button type="button">app vue</button></a>
+        <a href="/app-react"><button type="button">app react</button></a>
+      </p>
+
+      <p>
+        <button @click="handleClick" type="button">app main error</button>
       </p>
     </div>
 
@@ -13,7 +17,13 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    handleClick() {
+      window.obj.appmain;
+    }
+  }
+};
 </script>
 
 <style lang="scss">

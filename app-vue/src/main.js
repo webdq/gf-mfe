@@ -9,6 +9,13 @@ Vue.config.productionTip = false;
 
 let router = null;
 let instance = null;
+let appSentry = null;
+
+Vue.config.errorHandler = function (err, vm, info) {
+  console.log('app vue errorHandler');
+  appSentry.run(err, vm, info);
+};
+
 function render(props = {}) {
   const { container } = props;
   router = new VueRouter({
@@ -26,10 +33,12 @@ function render(props = {}) {
 
 // 独立运行时
 if (!window.__POWERED_BY_QIANKUN__) {
+  appSentry = require('./sentry/vue'); // eslit-disable-line
   render();
 }
 
-export async function bootstrap() {
+export async function bootstrap(props) {
+  appSentry = props.appSentry;
   console.log('[vue] vue app bootstraped');
 }
 export async function mount(props) {
@@ -41,4 +50,5 @@ export async function unmount() {
   instance.$el.innerHTML = '';
   instance = null;
   router = null;
+  appSentry = null;
 }
