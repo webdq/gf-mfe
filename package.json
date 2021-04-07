@@ -1,0 +1,30 @@
+{
+  "name": "gf-mfe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "run-s install:*",
+    "install:main": "cd app-main && yarn",
+    "install:vue": "cd app-vue && yarn",
+    "install:react": "cd app-react && yarn",
+    "start": "run-p start:*",
+    "start:main": "cd app-main && yarn start",
+    "start:vue": "cd app-vue && yarn start",
+    "start:react": "cd app-react && yarn start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webdq/gf-mfe.git"
+  },
+  "keywords": [],
+  "author": "webdq",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/webdq/gf-mfe/issues"
+  },
+  "homepage": "https://github.com/webdq/gf-mfe#readme",
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
