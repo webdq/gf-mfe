@@ -1,20 +1,22 @@
 import { registerMicroApps, start } from 'qiankun';
 import * as vueAppSentry from './sentry/vue';
+import * as reactAppSentry from './sentry/react';
 
 export function startQiankun() {
   const apps = [
     {
       name: 'app-vue',
-      entry: '//localhost:9901',
+      entry: process.env.VUE_APP_SUBAPP_VUE_URL,
       container: '#subapp',
       activeRule: '/app-vue',
       props: { appSentry: vueAppSentry }
     },
     {
       name: 'app-react',
-      entry: '//localhost:9902',
+      entry: process.env.VUE_APP_SUBAPP_REACT_URL,
       container: '#subapp',
-      activeRule: '/app-react'
+      activeRule: '/app-react',
+      props: { appSentry: reactAppSentry }
     }
   ];
   registerMicroApps(apps);

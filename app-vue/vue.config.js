@@ -5,7 +5,7 @@ const plugins = [];
 if (process.env.NODE_ENV === 'production') {
   plugins.push(
     new SentryWebpackPlugin({
-      url: 'http://192.168.1.182:9000/',
+      url: process.env.SENTRY_URL,
       authToken: process.env.SENTRY_AUTH_TOKEN,
       org: 'sentry',
       project: 'app-vue',
