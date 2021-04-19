@@ -18,6 +18,7 @@
 </template>
 <script>
 export default {
+  props: ['a'],
   methods: {
     handleClick() {
       window.obj.appmain;

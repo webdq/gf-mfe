@@ -35,7 +35,6 @@ module.exports = {
       config.hot = false;
       config.watchContentBase = false;
       config.liveReload = false;
-      config.open = false;
       return config;
     };
   }

@@ -12,8 +12,6 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.log('componentDidCatch', error);
-    console.log(this.props.hub);
     this.setState({ error, errorInfo });
     /**
      * We make use of the Sentry hub passed in props to report the application

@@ -1,37 +1,47 @@
-import Vue from 'vue';
-import { BrowserClient, Hub } from '@sentry/browser';
+import { BrowserClient, Hub, defaultIntegrations } from '@sentry/browser';
 import { Integrations } from '@sentry/tracing';
 import { getComponentName } from './helps';
 
-const client = new BrowserClient({
-  Vue,
-  dsn: 'http://72de4b0a32fe4e8db584fa5980328b8e@192.168.142.100:9000/6',
-  integrations: [new Integrations.BrowserTracing()],
+export function init({ Vue, dsn }) {
+  const client = new BrowserClient({
+    Vue,
+    dsn,
+    integrations: [...defaultIntegrations, new Integrations.BrowserTracing()],
 
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
-  attachProps: true,
-  logErrors: true
-});
-
-const hub = new Hub(client);
-
-export function run(err, vm, info) {
-  const metadata = {};
-  if (vm) {
-    metadata.componentName = getComponentName(vm);
-    metadata.propsData = vm.$options.propsData;
-  }
-  if (info) {
-    metadata.lifecycleHook = info;
-  }
-  setTimeout(function () {
-    hub.withScope(function (scope) {
-      scope.setContext('vue', metadata);
-      hub.captureException(err);
-    });
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+    attachProps: true,
+    logErrors: true
   });
-  console.error(err);
+
+  const hub = new Hub(client);
+  return { client, hub };
+}
+
+export function run({ Vue, hub }) {
+  const currentErrorHandler = Vue.config.errorHandler;
+  Vue.config.errorHandler = function (error, vm, info) {
+    const metadata = {};
+    if (vm) {
+      metadata.componentName = getComponentName(vm);
+      metadata.propsData = vm.$options.propsData;
+    }
+    if (info) {
+      metadata.lifecycleHook = info;
+    }
+    setTimeout(function () {
+      hub.run((currentHub) => {
+        currentHub.configureScope(function (scope) {
+          scope.setContext('vue', metadata);
+        });
+        currentHub.captureException(error);
+      });
+    });
+    if (typeof currentErrorHandler === 'function') {
+      currentErrorHandler.call(Vue, error, vm, info);
+    }
+    console.error(error);
+  };
 }

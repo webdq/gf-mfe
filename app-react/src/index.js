@@ -3,15 +3,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import ErrorBoundary from './sentry/ErrorBoundary';
-// import { addErrorHandler, removeErrorHandler } from './sentry/errorHandler';
 
 let appSentry = null;
 
 function render(props) {
+  const { hub } = appSentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
+  appSentry.run({ hub });
+
   const { container } = props;
-  const { client, hub } = appSentry.init();
-  client.setupIntegrations();
-  // addErrorHandler(hub);
   ReactDOM.render(
     <ErrorBoundary hub={hub}>
       <App />
@@ -25,19 +24,19 @@ if (!window.__POWERED_BY_QIANKUN__) {
   render({});
 }
 
-export async function bootstrap(props) {
-  appSentry = props.appSentry;
+export async function bootstrap() {
   console.log('[react17] react app bootstraped');
 }
 
 export async function mount(props) {
   console.log('[react17] props from main framework', props);
+  appSentry = props.appSentry;
   render(props);
 }
 
 export async function unmount(props) {
   const { container } = props;
   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
+  appSentry.stop();
   appSentry = null;
-  // removeErrorHandler();
 }

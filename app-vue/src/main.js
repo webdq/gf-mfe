@@ -11,12 +11,10 @@ let router = null;
 let instance = null;
 let appSentry = null;
 
-Vue.config.errorHandler = function (err, vm, info) {
-  console.log('app vue errorHandler');
-  appSentry.run(err, vm, info);
-};
-
 function render(props = {}) {
+  const { hub } = appSentry.init({ Vue, dsn: process.env.VUE_APP_SENTRY_DSN });
+  appSentry.run({ Vue, hub });
+
   const { container } = props;
   router = new VueRouter({
     base: window.__POWERED_BY_QIANKUN__ ? '/app-vue/' : '/',
@@ -37,12 +35,12 @@ if (!window.__POWERED_BY_QIANKUN__) {
   render();
 }
 
-export async function bootstrap(props) {
-  appSentry = props.appSentry;
+export async function bootstrap() {
   console.log('[vue] vue app bootstraped');
 }
 export async function mount(props) {
   console.log('[vue] props from main framework', props);
+  appSentry = props.appSentry;
   render(props);
 }
 export async function unmount() {
